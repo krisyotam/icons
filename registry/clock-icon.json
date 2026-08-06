@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "clock-icon",
+  "dependencies": ["motion"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "icons/clock-icon.tsx",
+      "content": "import { forwardRef, useImperativeHandle } from \"react\";\n\nimport type { AnimatedIconHandle, AnimatedIconProps } from \"./types\";\nimport { motion, useAnimate } from \"motion/react\";\n\nconst ClockIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(\n  (\n    { size = 24, color = \"currentColor\", strokeWidth = 2, className = \"\" },\n    ref,\n  ) => {\n    const [scope, animate] = useAnimate();\n\n    const start = async () => {\n      await animate(\n        \".clock-hands\",\n        {\n          rotate: 360,\n        },\n        {\n          duration: 1,\n          ease: \"easeInOut\",\n        },\n      );\n    };\n\n    const stop = async () => {\n      await animate(\n        \".clock-hands\",\n        {\n          rotate: 0,\n        },\n        {\n          duration: 1,\n          ease: \"easeInOut\",\n        },\n      );\n    };\n\n    useImperativeHandle(ref, () => {\n      return {\n        startAnimation: start,\n        stopAnimation: stop,\n      };\n    });\n\n    const handleHoverStart = () => {\n      start();\n    };\n\n    const handleHoverEnd = () => {\n      stop();\n    };\n\n    return (\n      <motion.svg\n        ref={scope}\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width={size}\n        height={size}\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke={color}\n        strokeWidth={strokeWidth}\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n        className={`${className} cursor-pointer`}\n        onHoverStart={handleHoverStart}\n        onHoverEnd={handleHoverEnd}\n      >\n        <motion.path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" />\n        <motion.path\n          d=\"M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0\"\n          className=\"clock-body\"\n        />\n        <motion.path d=\"M12 7v5l3 3\" className=\"clock-hands\" />\n      </motion.svg>\n    );\n  },\n);\n\nClockIcon.displayName = \"ClockIcon\";\n\nexport default ClockIcon;\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "icons/types.ts",
+      "content": "import type { SVGProps } from \"react\";\n\nexport type IconEasing =\n  | \"linear\"\n  | \"easeIn\"\n  | \"easeOut\"\n  | \"easeInOut\"\n  | \"circIn\"\n  | \"circOut\"\n  | \"circInOut\"\n  | \"backIn\"\n  | \"backOut\"\n  | \"backInOut\"\n  | \"anticipate\";\n\nexport interface AnimatedIconProps extends Omit<\n  SVGProps<SVGSVGElement>,\n  | \"ref\"\n  | \"onAnimationStart\"\n  | \"onAnimationEnd\"\n  | \"onAnimationIteration\"\n  | \"onDrag\"\n  | \"onDragEnd\"\n  | \"onDragEnter\"\n  | \"onDragExit\"\n  | \"onDragLeave\"\n  | \"onDragOver\"\n  | \"onDragStart\"\n  | \"onDrop\"\n  | \"values\"\n> {\n  /** Icon size in pixels or CSS string */\n  size?: number | string;\n  /** Icon color (defaults to currentColor) */\n  color?: string;\n  /** SVG stroke width */\n  strokeWidth?: number;\n  /** Additional CSS classes */\n  className?: string;\n}\n\nexport interface AnimatedIconHandle {\n  startAnimation: () => void;\n  stopAnimation: () => void;\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "washing-machine-icon",
+  "dependencies": ["motion"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "icons/washing-machine-icon.tsx",
+      "content": "import { forwardRef, useImperativeHandle, useRef } from \"react\";\nimport type { AnimatedIconHandle, AnimatedIconProps } from \"./types\";\nimport { motion, useAnimate } from \"motion/react\";\n\nconst WashingMachineIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(\n  (\n    { size = 24, color = \"currentColor\", strokeWidth = 2, className = \"\" },\n    ref,\n  ) => {\n    const [scope, animate] = useAnimate();\n    const animationControls = useRef<Array<ReturnType<typeof animate>>>([]);\n\n    const start = async () => {\n      animationControls.current.forEach((control) => control.stop());\n      animationControls.current = [];\n\n      // Continuously rotate the inner drum while hovering\n      animationControls.current.push(\n        animate(\n          \".drum-inner\",\n          {\n            rotate: [0, 360],\n          },\n          {\n            duration: 2,\n            repeat: Infinity,\n            ease: \"linear\",\n          },\n        ),\n      );\n    };\n\n    const stop = () => {\n      animationControls.current.forEach((control) => control.stop());\n      animationControls.current = [];\n\n      // Stop the rotation\n      animate(\n        \".drum-inner\",\n        {\n          rotate: 0,\n        },\n        {\n          duration: 0.3,\n          ease: \"easeOut\",\n        },\n      );\n    };\n\n    useImperativeHandle(ref, () => ({\n      startAnimation: start,\n      stopAnimation: stop,\n    }));\n\n    return (\n      <motion.svg\n        ref={scope}\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width={size}\n        height={size}\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke={color}\n        strokeWidth={strokeWidth}\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n        className={`cursor-pointer ${className}`}\n        onHoverStart={start}\n        onHoverEnd={stop}\n      >\n        <path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" />\n\n        {/* Machine body */}\n        <path d=\"M5 3m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z\" />\n\n        {/* Drum outer */}\n        <path d=\"M12 14m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0\" />\n\n        {/* Control buttons */}\n        <path d=\"M8 6h.01\" />\n        <path d=\"M11 6h.01\" />\n        <path d=\"M14 6h2\" />\n\n        {/* Inner drum - rotating part */}\n        <motion.path\n          className=\"drum-inner\"\n          d=\"M8 14c1.333 -.667 2.667 -.667 4 0c1.333 .667 2.667 .667 4 0\"\n          style={{ transformOrigin: \"50% 58.33%\" }}\n        />\n      </motion.svg>\n    );\n  },\n);\n\nWashingMachineIcon.displayName = \"WashingMachineIcon\";\nexport default WashingMachineIcon;\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "icons/types.ts",
+      "content": "import type { SVGProps } from \"react\";\n\nexport type IconEasing =\n  | \"linear\"\n  | \"easeIn\"\n  | \"easeOut\"\n  | \"easeInOut\"\n  | \"circIn\"\n  | \"circOut\"\n  | \"circInOut\"\n  | \"backIn\"\n  | \"backOut\"\n  | \"backInOut\"\n  | \"anticipate\";\n\nexport interface AnimatedIconProps extends Omit<\n  SVGProps<SVGSVGElement>,\n  | \"ref\"\n  | \"onAnimationStart\"\n  | \"onAnimationEnd\"\n  | \"onAnimationIteration\"\n  | \"onDrag\"\n  | \"onDragEnd\"\n  | \"onDragEnter\"\n  | \"onDragExit\"\n  | \"onDragLeave\"\n  | \"onDragOver\"\n  | \"onDragStart\"\n  | \"onDrop\"\n  | \"values\"\n> {\n  /** Icon size in pixels or CSS string */\n  size?: number | string;\n  /** Icon color (defaults to currentColor) */\n  color?: string;\n  /** SVG stroke width */\n  strokeWidth?: number;\n  /** Additional CSS classes */\n  className?: string;\n}\n\nexport interface AnimatedIconHandle {\n  startAnimation: () => void;\n  stopAnimation: () => void;\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}
